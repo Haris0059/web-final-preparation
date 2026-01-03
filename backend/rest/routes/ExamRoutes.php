@@ -51,11 +51,19 @@ Flight::route('PUT /employee/edit/@employee_id', function ($employee_id) {
      * 10 points
      */
     $data = Flight::request()->data->getData();
+    try {
+        Flight::examService()->edit_employee($employee_id, $data);
 
-    Flight::json([
+        Flight::json([
         'message' => "Employee edited successfully",
-        'data' => Flight::examService()->edit_employee($employee_id, $data)
+        'data' => Flight::examService()->get_employee($employee_id)
     ]);
+    } catch (Exception $e) {
+        Flight::json([
+        'message' => "Failed to edit employee" . $e->getMessage(),
+        'data' => null
+         ]);
+    }
 });
 
 Flight::route('GET /orders/report', function () {

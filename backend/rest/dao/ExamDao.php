@@ -63,7 +63,7 @@ class ExamDao
                          FROM payments p
                          JOIN customers c ON c.customerNumber = p.customerNumber
                          JOIN employees e ON e.employeeNumber = c.salesRepEmployeeNumber
-                         GROUP BY e.employeeNumber", [])
+                         GROUP BY e.employeeNumber", []);
   }
 
   /** TODO
@@ -76,12 +76,46 @@ class ExamDao
   /** TODO
    * Implement DAO method used to edit employee data
    */
-  public function edit_employee($employee_id, $data) {}
+  public function edit_employee($employee_id, $data) {
+    return $this->query("UPDATE employees e
+                         SET e.firstName = :firstName,
+                             e.lastName = :lastName,
+                             e.email = :email
+                         WHERE e.employeeNumber = :employeeNumber;", [
+                          'employeeNumber' => $employee_id,
+                          'firstName' => $data['firstName'],
+                          'lastName' => $data['lastName'],
+                          'email' => $data['email']
+                         ]);
+  }
+
+  //helper function for get employee data
+  public function get_employee($employee_id) {
+    return $this->query("SELECT e.firstName AS first_name,
+                                e.lastName AS last_name,
+                                e.email
+                         FROM employees e
+                         WHERE e.employeeNumber = :employeeNumber", ['employeeNumber' => $employee_id]);
+  }
 
   /** TODO
    * Implement DAO method used to get orders report
    */
-  public function get_orders_report() {}
+  public function get_orders_report() {
+    return $this->query("SELECT GROUP_CONCAT(
+                                  CONCAT('<tr>',
+                                         '<td>', p.productName, '</td>',
+                                         '<td>', od.quantityOrdered, '</td>',
+                                         '<td>', od.priceEach, '</td></tr>')
+                                  SEPARATOR ''
+                                ) AS details,
+                                o.orderNumber as order_number,
+                                SUM(od.priceEach * od.quantityOrdered) as total_amount
+                         FROM orders o
+                         JOIN orderdetails od ON od.orderNumber = o.orderNumber
+                         JOIN products p ON p.productCode = od.productCode
+                         GROUP BY o.orderNumber", []);
+  }
 
   /** TODO
    * Implement DAO method used to get all products in a single order
@@ -92,6 +126,6 @@ class ExamDao
                                 od.priceEach as price_each
                          FROM orderdetails od
                          JOIN products p ON p.productCode = od.productCode
-                         WHERE od.orderNumber = :orderNumber;", ['orderNumber' => $order_id])
+                         WHERE od.orderNumber = :orderNumber;", ['orderNumber' => $order_id]);
   }
 }

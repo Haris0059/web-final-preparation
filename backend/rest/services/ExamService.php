@@ -29,6 +29,11 @@ class ExamService {
         return $this->dao->edit_employee($employee_id, $data);
     }
 
+    //helper function for get employee
+    public function get_employee($employee_id){
+        return $this->dao->get_employee($employee_id);
+    }
+
     /** TODO
     * Implement service method used to get orders report
     */
