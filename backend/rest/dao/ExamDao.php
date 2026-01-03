@@ -15,16 +15,16 @@ class ExamDao
        * List parameters such as servername, username, password, schema. Make sure to use appropriate port
        */
       $DB_HOST = 'localhost';
-      $DB_NAME 'web-final';
+      $DB_NAME = 'web-final';
       $DB_PORT = 3306;
       $DB_USER = 'root';
-      $DB_PASSWORD '';
+      $DB_PASSWORD = '';
 
       /** TODO
        * Create new connection
        */
       $this->connection = new PDO(
-        "mysql:host=" . $DB_HOST . ";dbname=" . DB_NAME . ";port=" . $DB_PORT,
+        "mysql:host=" . $DB_HOST . ";dbname=" . $DB_NAME . ";port=" . $DB_PORT,
         $DB_USER,
         $DB_PASSWORD,
         [
